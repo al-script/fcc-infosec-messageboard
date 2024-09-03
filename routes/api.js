@@ -74,6 +74,8 @@
 
 // TODO: handle creating boards and in such a way where if multiple words then doesn't break the api requests
 
+// TODO: fix inconsistent naming camel vs _
+
 module.exports = function (app) {
   const { v4: uuidv4, validate } = require("uuid");
   const getNewId = () => {
@@ -328,9 +330,9 @@ module.exports = function (app) {
       return;
     }
   });
-
   const getBoard = (board_id, requestLogPrefix) => {
     try {
+      createBoardIfUndefined(board_id);
       // TODO: more efficient way to handle this rather than making a copy of the entire board each time...?
       const boardCopy = JSON.parse(
         JSON.stringify(forumDatabase[board_id].threads)
@@ -515,6 +517,7 @@ module.exports = function (app) {
   });
   const getThread = (board_id, thread_id, requestLogPrefix) => {
     try {
+      createBoardIfUndefined(board_id);
       const threadCopy = JSON.parse(
         JSON.stringify(
           forumDatabase[board_id].threads.filter(
