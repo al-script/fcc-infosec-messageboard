@@ -6,7 +6,7 @@ const api = require("../routes/api");
 
 chai.use(chaiHttp);
 
-const testBoard = "test555";
+const testBoard = "test";
 const testThread = "id";
 const testThreadToDelete = "id2";
 const testReply = "reply1";
