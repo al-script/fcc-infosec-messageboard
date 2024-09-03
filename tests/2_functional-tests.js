@@ -30,8 +30,12 @@ suite("Functional Tests", function () {
       result = await chai
         .request(server)
         .post(`/api/threads/${testBoard}`)
+        // .send({
+        //   thread_text: "test_text",
+        //   delete_password: "test_password",
+        // })
         .send({
-          thread_text: "test_text",
+          text: "test_text",
           delete_password: "test_password",
         });
     });
