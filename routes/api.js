@@ -596,6 +596,7 @@ module.exports = function (app) {
     // TODO: handle checking if reply_id even exists and if not then return an error
     // TODO: Lot of time complexity here, is it possible to setup the db so can directly access the index of these? *** what are the tradeoffs of that?
     try {
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads
         .filter((thread) => thread._id === thread_id)[0]
         .replies.map((reply) => {
@@ -671,6 +672,7 @@ module.exports = function (app) {
     // probably need to put this in a try/catch block *************
 
     try {
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads.map((thread) => {
         if (thread._id === thread_id) {
           return (thread.reported = true);
