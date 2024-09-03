@@ -942,11 +942,11 @@ module.exports = function (app) {
 
         bcrypt.compare(delete_password, thread_hash, function (err, result) {
           if (!result) {
-            res.status(200).json({ message: "incorrect password" });
+            res.status(200).json("incorrect password" );
             console.log(requestLogPrefix, "Failure, incorrect password");
           } else {
             handleDeleteThread(board_id, thread_id, requestLogPrefix);
-            res.status(200).json({ message: "success" });
+            res.status(200).json("success");
             console.log(requestLogPrefix, "Success");
           }
           return;
