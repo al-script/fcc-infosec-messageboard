@@ -75,6 +75,8 @@
 // TODO: handle creating boards and in such a way where if multiple words then doesn't break the api requests
 
 // TODO: fix inconsistent naming camel vs _
+// Fix status messages
+// Double-check tests 
 
 module.exports = function (app) {
   const { v4: uuidv4, validate } = require("uuid");
