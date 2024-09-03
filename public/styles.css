@@ -1,0 +1,563 @@
+/* COLOR SCHEME: */
+/* TODO: lightmode/darkmode */
+:root {
+  --md-sys-color-primary: rgb(157 203 252);
+  --md-sys-color-surface-tint: rgb(157 203 252);
+  --md-sys-color-on-primary: rgb(0 51 85);
+  --md-sys-color-primary-container: rgb(19 74 116);
+  --md-sys-color-on-primary-container: rgb(207 228 255);
+  --md-sys-color-secondary: rgb(186 200 218);
+  --md-sys-color-on-secondary: rgb(36 50 64);
+  --md-sys-color-secondary-container: rgb(58 72 87);
+  --md-sys-color-on-secondary-container: rgb(214 228 247);
+  --md-sys-color-tertiary: rgb(213 190 229);
+  --md-sys-color-on-tertiary: rgb(58 42 73);
+  --md-sys-color-tertiary-container: rgb(81 64 96);
+  --md-sys-color-on-tertiary-container: rgb(240 219 255);
+  --md-sys-color-error: rgb(255 180 171);
+  --md-sys-color-on-error: rgb(105 0 5);
+  --md-sys-color-error-container: rgb(147 0 10);
+  --md-sys-color-on-error-container: rgb(255 218 214);
+  --md-sys-color-background: rgb(16 20 24);
+  --md-sys-color-on-background: rgb(224 226 232);
+  --md-sys-color-surface: rgb(16 20 24);
+  --md-sys-color-on-surface: rgb(224 226 232);
+  --md-sys-color-surface-variant: rgb(66 71 78);
+  --md-sys-color-on-surface-variant: rgb(194 199 207);
+  --md-sys-color-outline: rgb(140 145 153);
+  --md-sys-color-outline-variant: rgb(66 71 78);
+  --md-sys-color-shadow: rgb(0 0 0);
+  --md-sys-color-scrim: rgb(0 0 0);
+  --md-sys-color-inverse-surface: rgb(224 226 232);
+  --md-sys-color-inverse-on-surface: rgb(45 49 53);
+  --md-sys-color-inverse-primary: rgb(50 98 141);
+  --md-sys-color-primary-fixed: rgb(207 228 255);
+  --md-sys-color-on-primary-fixed: rgb(0 29 52);
+  --md-sys-color-primary-fixed-dim: rgb(157 203 252);
+  --md-sys-color-on-primary-fixed-variant: rgb(19 74 116);
+  --md-sys-color-secondary-fixed: rgb(214 228 247);
+  --md-sys-color-on-secondary-fixed: rgb(15 29 42);
+  --md-sys-color-secondary-fixed-dim: rgb(186 200 218);
+  --md-sys-color-on-secondary-fixed-variant: rgb(58 72 87);
+  --md-sys-color-tertiary-fixed: rgb(240 219 255);
+  --md-sys-color-on-tertiary-fixed: rgb(36 21 50);
+  --md-sys-color-tertiary-fixed-dim: rgb(213 190 229);
+  --md-sys-color-on-tertiary-fixed-variant: rgb(81 64 96);
+  --md-sys-color-surface-dim: rgb(16 20 24);
+  --md-sys-color-surface-bright: rgb(54 57 62);
+  --md-sys-color-surface-container-lowest: rgb(11 14 18);
+  --md-sys-color-surface-container-low: rgb(25 28 32);
+  --md-sys-color-surface-container: rgb(29 32 36);
+  --md-sys-color-surface-container-high: rgb(39 42 47);
+  --md-sys-color-surface-container-highest: rgb(50 53 58);
+}
+
+/* || GLOBAL */
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: "Atkinson Hyperlegible";
+  color: var(--md-sys-color-on-surface);
+}
+html {
+  font-size: calc(
+    11px + 0.38vw
+  ); /* https://matthewjamestaylor.com/responsive-font-size */
+  /* Visual */
+  scroll-behavior: smooth;
+  overflow: scroll;
+}
+
+/* || BODY AND CONTAINERS */
+body {
+  background-color: var(--md-sys-color-surface);
+}
+
+#page-container {
+  width: 100%;
+  height: 100%;
+}
+
+#content-container {
+  display: flex;
+  justify-content: center;
+}
+
+#board-container,
+#thread-container,
+#index-container {
+  width: 90%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+#thread-container {
+  gap: 1rem !important;
+}
+
+/* || FLEX */
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-align-baseline {
+  align-items: baseline;
+}
+
+.flex-align-self-end {
+  align-self: flex-end;
+}
+
+.flex-align-self-center {
+  align-self: center;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.justify-content-flex-end {
+  justify-content: flex-end;
+}
+
+/* || GAPS */
+.gap-half {
+  gap: 0.5rem;
+}
+
+.gap-three-quarters {
+  gap: 0.75rem;
+}
+
+.gap-one {
+  gap: 1rem;
+}
+
+.gap-one-point-five {
+  gap: 1.5rem;
+}
+
+.gap-two {
+  gap: 2rem;
+}
+
+.gap-three {
+  gap: 3rem;
+}
+
+/* || PADDING */
+.padding-half {
+  padding: 0.5rem;
+}
+
+.padding-one {
+  padding: 1rem;
+}
+
+.padding-one-plus-half {
+  padding: 1.5rem;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-end {
+  align-items: end;
+}
+
+.align-items-flex-start {
+  align-items: flex-start;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.padding-right-one {
+  padding-right: 1rem;
+}
+
+/* || SIZES */
+.width-90 {
+  width: 90%;
+}
+
+/* || BACKGROUND COLORS */
+.background-primary {
+  background-color: var(--md-sys-color-primary);
+}
+
+/* || TYPOGRAPHY COLORS */
+.color-primary {
+  color: var(--md-sys-color-primary) !important;
+}
+
+.color-secondary {
+  color: var(--md-sys-color-secondary);
+}
+
+.color-error {
+  color: var(--md-sys-color-error);
+}
+
+/* || TYPOGRAPHY FONT SIZES */
+.font-two {
+  font-size: 2rem;
+}
+
+.font-four {
+  font-size: 4rem;
+}
+
+/* || MISC TYPOGRAPHICAL */
+/* Address is dark by default, and bright when hovering */
+.address {
+  color: var(--md-sys-color-outline-variant);
+}
+.address:hover {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+}
+
+/* || BUTTON STYLING */
+.button-default {
+  padding: 1rem;
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+.button-default > div {
+  width: max-content;
+}
+
+/* || BUTTON COLORS */
+/* TODO: */
+/* Hover - slighly lighter */
+/* Active - even lighter */
+
+.button-color-warning {
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+.button-color-warning:hover {
+  background-color: rgb(173, 2, 13);
+}
+.button-color-warning:active {
+  background-color: rgb(195, 2, 15);
+}
+
+.button-color-secondary {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+.button-color-secondary:hover {
+  background-color: rgb(73, 91, 109);
+}
+.button-color-secondary:active {
+  background-color: rgb(93, 116, 138);
+}
+
+.button-color-primary {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+.button-color-primary:hover {
+  background-color: rgb(24, 91, 142);
+}
+.button-color-primary:active {
+  background-color: rgb(30, 111, 172);
+}
+
+.button-color-surface-container {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-primary-container);
+  outline: 1px solid var(--md-sys-color-outline);
+}
+.button-color-surface-container:hover {
+  background-color: rgb(45, 49, 55);
+}
+.button-color-surface-container:active {
+  background-color: rgb(68, 74, 82);
+}
+
+/* || FORMS */
+.form-default {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-default:active {
+  background-color: var(--md-sys-color-surface-container-high);
+}
+
+.form-large {
+  border: 1px solid var(--md-sys-color-secondary);
+  border-radius: 3rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 25rem;
+}
+
+.form-header-default {
+  font-size: 2rem;
+}
+
+.form-section-default {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-section-description {
+  font-size: 1rem;
+}
+
+.input-default {
+  padding: 0.75rem 1.5rem 0.75rem 1.5rem;
+  background-color: var(--md-sys-color-surface-container);
+  outline: 1px solid var(--md-sys-color-outline);
+  border: none;
+  border-radius: 2rem;
+}
+
+.input-textarea {
+  height: 10rem;
+  resize: none;
+  padding: 1rem;
+}
+
+.form-bottom-border {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.prevent-submit {
+  cursor: not-allowed;
+  opacity: 50%;
+}
+
+/* || BOARD STYLING */
+.board-title-container {
+  gap: 0.75rem;
+}
+
+/* || THREAD STYLING */
+#threads {
+  width: 100%;
+  max-width: 45rem;
+  gap: 1rem;
+}
+
+.threads-header {
+  width: fit-content;
+  font-size: 4rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.thread-title {
+  width: 95%;
+  overflow: hidden;
+}
+
+.thread-container,
+.index-item {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 2rem;
+  min-height: 3rem;
+  padding: 1.5rem;
+  /* max-width: 25rem; */
+  /* width: 90%; */
+}
+
+.index-item {
+  padding: 1.5rem 1.5rem 3.25rem 1.5rem;
+  max-width: 45rem;
+}
+
+.index-item:hover {
+  background-color: var(--md-sys-color-surface-container-low);
+}
+
+/* .thread-container:hover {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+} */
+
+/* Toggle if thread is activated */
+.thread-container-active {
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.thread-container:active,
+.index-item:active {
+  background-color: var(--md-sys-color-surface-container);
+}
+
+/* why do this need to be explicity set as space-between? why cant use other class? */
+.thread-header {
+  justify-content: space-between;
+}
+
+.thread-text-content {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.thread-reply {
+  padding: 1rem;
+  border: 1px solid var(--md-sys-color-surface-variant);
+  border-radius: 1rem;
+}
+.thread-reply:active {
+  background-color: var(--md-sys-color-surface-container-high);
+}
+
+.thread-add-reply-form,
+.thread-delete-thread-form,
+.thread-delete-reply-form {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  padding: 1.5rem;
+  border-radius: 2rem;
+}
+
+.thread-actions-forms-container {
+  width: 90%;
+  gap: 3rem;
+}
+
+.thread-content-container {
+  padding-top: 1rem;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.thread-text-content,
+.reply-text-content {
+  font-size: 1.55rem;
+}
+
+.reply-date {
+  font-size: 1rem;
+}
+
+/* || TOGGLE BUTTONS */
+.toggle-button-group {
+  border-radius: 2rem;
+  padding: 1rem;
+
+  flex-direction: column-reverse;
+
+  outline: 1px solid var(--md-sys-color-outline-variant);
+}
+/* .toggle-button-group:hover {
+  background-color: var(--md-sys-color-surface-container);
+} */
+.toggle-button-group:active {
+  background-color: rgb(45, 50, 56);
+}
+
+.toggle-button-group-active {
+  background-color: var(--md-sys-color-surface-container);
+  outline: 1px solid var(--md-sys-color-error) !important;
+}
+
+/* could make a generic class */
+.thread-destructive-actions-toggle-button-group-toggle-button,
+.thread-reply-destructive-actions-toggle-button-group-toggle-button {
+  align-self: flex-end;
+}
+
+/* || SCROLLBAR */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-secondary);
+}
+
+/* || SELECTION */
+::-moz-selection {
+  color: var(--md-sys-color-on-secondary);
+  background: var(--md-sys-color-secondary-container);
+}
+
+::selection {
+  color: var(--md-sys-color-on-secondary-container);
+  background: var(--md-sys-color-secondary-container);
+}
+
+/* || MISC */
+.hidden {
+  display: none !important;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.no-outline {
+  outline: none !important;
+}
+
+.no-border {
+  border: none !important;
+}
+
+.noselect {
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.width-fit-content {
+  width: fit-content;
+}
+
+.width-100 {
+  width: 100% !important;
+}
+
+.max-width-100 {
+  max-width: 100%;
+}
+
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.border {
+  width: 100%;
+  border: 0.1rem solid var(--md-sys-color-outline);
+  border-radius: 1rem;
+  margin: 0.5rem 0rem 1rem 0;
+}
+
+.hover-underline:hover {
+  text-decoration: underline;
+}
