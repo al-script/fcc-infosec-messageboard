@@ -6,7 +6,7 @@ const api = require("../routes/api");
 
 chai.use(chaiHttp);
 
-const testBoard = "test";
+const testBoard = "test555";
 const testThread = "id";
 const testThreadToDelete = 'id2'
 const testReply = "reply1";
@@ -16,6 +16,8 @@ const testReply = "reply1";
 
 // What works best for the assignment? Using one single it statement with multiple assertions, or multiple it statements? The assignment says 10 tests passing, so sounds like need one it statement for eac
 // Also, are these tests also supposed to check if the data is handled properly on the server? Or simply that the server returns the proper data to the client?
+
+// TODO: Fix API so that create a board when are using that board name in a request****
 
 suite("Functional Tests", function () {
   // 1. Creating a new thread: POST request to /api/threads/{board}

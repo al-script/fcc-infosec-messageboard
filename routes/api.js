@@ -232,6 +232,18 @@ module.exports = function (app) {
     },
   };
 
+  async function createBoardIfUndefined(boardName, currentTime) {
+    if (!forumDatabase.boardName) {
+      currentTime = currentTime || getCurrentDateString();
+      forumDatabase.boardName = {
+        title: boardName,
+        createdOn: currentTime,
+        lastReply: currentTime,
+        threads: [],
+      };
+    }
+  }
+
   // GET index request
   app.get("/api/boards", (req, res) => {
     const requestLogPrefix = `${getNewId()} | GET INDEX REQ |`;
@@ -416,9 +428,12 @@ module.exports = function (app) {
       return;
     }
   });
+  // TODO: FIX inconsistent boardId and board_id
   const postThread = (board_id, thread_text, delete_password) => {
     try {
       const currentTime = getCurrentDateString();
+
+      createBoardIfUndefined(board_id, currentTime);
 
       bcrypt.hash(delete_password, saltRounds, function (err, hash) {
         forumDatabase[board_id].threads.push({
