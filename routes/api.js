@@ -654,7 +654,7 @@ module.exports = function (app) {
 
         handleReportThread(board_id, thread_id, requestLogPrefix);
 
-        res.status(200).json("reported" );
+        res.status(200).json("reported");
         console.log(requestLogPrefix, "Success");
       }
     } catch (error) {
@@ -709,31 +709,32 @@ module.exports = function (app) {
     console.log(requestLogPrefix, "Begin function");
 
     const validateRequest = () => {
+      const reply_text = req.body.reply_text || req.body.text;
       if (
         // Check existance
         req.params.board &&
         req.body.thread_id &&
-        req.body.reply_text &&
+        reply_text &&
         req.body.delete_password &&
         // Check types
         typeof req.params.board == "string" &&
         typeof req.body.thread_id == "string" &&
-        typeof req.body.reply_text == "string" &&
+        typeof reply_text == "string" &&
         typeof req.body.delete_password == "string" &&
         // Check lengths
         // TODO: check thread_id length?
         // TODO: make sure are handling correct lengths
         req.params.board.length < 101 &&
         req.params.board.length > 3 &&
-        req.body.reply_text.length < 255 &&
-        req.body.reply_text.length > 3 &&
+        reply_text.length < 255 &&
+        reply_text.length > 3 &&
         req.body.delete_password.length < 255 &&
         req.body.delete_password.length > 3
       ) {
         let boardId, threadId, replyText, deletePassword;
         boardId = escapeHtml(req.params.board);
         threadId = escapeHtml(req.body.thread_id);
-        replyText = escapeHtml(req.body.reply_text);
+        replyText = escapeHtml(reply_text);
         deletePassword = req.body.delete_password;
         return [boardId, threadId, replyText, deletePassword];
       } else {
