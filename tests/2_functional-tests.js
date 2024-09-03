@@ -89,7 +89,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body, "incorrect password");
+      assert.equal(result.text, "incorrect password");
     });
   });
 
@@ -112,7 +112,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body, "success");
+      assert.equal(result.text, "success");
     });
   });
 
@@ -134,7 +134,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body, "reported");
+      assert.equal(result.text, "reported");
     });
   });
 
@@ -203,7 +203,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body, "incorrect password");
+      assert.equal(result.text, "incorrect password");
     });
   });
 
@@ -227,7 +227,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body, "success");
+      assert.equal(result.text, "success");
     });
   });
 
@@ -252,7 +252,7 @@ suite("Functional Tests", function () {
     });
 
     it("returns the proper data to the client", async function () {
-      assert.equal(result.body, "reported");
+      assert.equal(result.text, "reported");
     });
   });
 });
