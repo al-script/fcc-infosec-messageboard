@@ -203,7 +203,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "incorrect password");
+      assert.equal(result.body, "incorrect password");
     });
   });
 
@@ -227,7 +227,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "success");
+      assert.equal(result.body, "success");
     });
   });
 
