@@ -134,7 +134,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "reported");
+      assert.equal(result.body, "reported");
     });
   });
 
@@ -252,7 +252,7 @@ suite("Functional Tests", function () {
     });
 
     it("returns the proper data to the client", async function () {
-      assert.equal(result.body.message, "reported");
+      assert.equal(result.body, "reported");
     });
   });
 });
