@@ -360,21 +360,22 @@ module.exports = function (app) {
 
     // NEW METHOD:
     const validateRequest = () => {
+      const thread_text = req.body.thread_text || req.body.text;
       if (
         // Do also need to check that no other params and body etc... exist? Probably not if aren't doing anythign with them, but perhaps there is something that can be executed without referencing it that need to be mindful of?
         // Check existance
         req.params.board &&
-        req.body.thread_text &&
+        thread_text &&
         req.body.delete_password &&
         // Check types
         typeof req.params.board == "string" &&
-        typeof req.body.thread_text == "string" &&
+        typeof thread_text == "string" &&
         typeof req.body.delete_password == "string" &&
         // Check lengths
         req.params.board.length < 101 &&
         req.params.board.length > 3 &&
-        req.body.thread_text.length < 255 &&
-        req.body.thread_text.length > 3 &&
+        thread_text.length < 255 &&
+        thread_text.length > 3 &&
         req.body.delete_password.length < 255 &&
         req.body.delete_password.length > 3
       ) {
@@ -382,7 +383,7 @@ module.exports = function (app) {
         // TODO: handle escaping password, restrict characters in such a way that cannot be used for an attack, or find whatever the best practices are ***
         let boardId, threadText, deletePassword;
         boardId = escapeHtml(req.params.board);
-        threadText = escapeHtml(req.body.thread_text);
+        threadText = escapeHtml(thread_text);
         // *************** TODO: ENFORCE SYMBOL RULES AND MAKE SURE NOT AN INJECTION ATTACK VECTOR****
         // deletePassword = escapeHtml(req.body.delete_password); // hmmmmmm perhaps dont do it for the password, but how then handle if the password is some sort of injection attack? ***********
         deletePassword = req.body.delete_password;
