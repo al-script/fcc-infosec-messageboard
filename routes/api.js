@@ -233,9 +233,10 @@ module.exports = function (app) {
   };
 
   async function createBoardIfUndefined(boardName, currentTime) {
-    if (!forumDatabase.boardName) {
+    if (!forumDatabase[boardName]) {
+      console.log("creating new board");
       currentTime = currentTime || getCurrentDateString();
-      forumDatabase.boardName = {
+      forumDatabase[boardName] = {
         title: boardName,
         createdOn: currentTime,
         lastReply: currentTime,

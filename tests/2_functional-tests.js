@@ -6,9 +6,9 @@ const api = require("../routes/api");
 
 chai.use(chaiHttp);
 
-const testBoard = "test555";
+const testBoard = "test";
 const testThread = "id";
-const testThreadToDelete = 'id2'
+const testThreadToDelete = "id2";
 const testReply = "reply1";
 
 // TODO: make the interface look nice
@@ -18,6 +18,8 @@ const testReply = "reply1";
 // Also, are these tests also supposed to check if the data is handled properly on the server? Or simply that the server returns the proper data to the client?
 
 // TODO: Fix API so that create a board when are using that board name in a request****
+// Need to refactor API so that handles creating a board if that board doesn't already exist, that includes doing what is necessary to handle updating the board
+// Gotta then test for the _id that is generated for the thread...
 
 suite("Functional Tests", function () {
   // 1. Creating a new thread: POST request to /api/threads/{board}
