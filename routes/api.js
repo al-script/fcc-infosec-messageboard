@@ -871,6 +871,7 @@ module.exports = function (app) {
     requestLogPrefix
   ) => {
     try {
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads
         .filter((thread) => thread._id === thread_id)[0]
         .replies.map((reply) => {
@@ -977,6 +978,7 @@ module.exports = function (app) {
 
       // Hard delete:
       // Could go wrong if multiple requests at the same time, need to be able to handle that***
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads = forumDatabase[board_id].threads.filter(
         (thread) => thread._id !== thread_id
       );
