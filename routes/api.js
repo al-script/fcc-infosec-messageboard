@@ -770,6 +770,7 @@ module.exports = function (app) {
     requestLogPrefix
   ) => {
     try {
+      createBoardIfUndefined(board_id);
       const currentTime = getCurrentDateString();
       const targetThread = forumDatabase[board_id].threads.filter(
         (thread) => thread._id === thread_id
