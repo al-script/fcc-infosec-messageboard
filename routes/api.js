@@ -185,7 +185,7 @@ module.exports = function (app) {
         deletePassword = req.body.delete_password;
         return [boardId, threadText, deletePassword];
       } else {
-        return false;
+        return false; // ends the parent function
       }
     };
 
@@ -424,6 +424,7 @@ module.exports = function (app) {
   });
   const handleReportThread = (board_id, thread_id, requestLogPrefix) => {
     // TODO: Lot of time complexity here, is it possible to setup the db so can directly access the index of these? *** what are the tradeoffs of that?
+
     try {
       createBoardIfUndefined(board_id);
       // Use some instead?
@@ -456,6 +457,9 @@ module.exports = function (app) {
         typeof req.body.thread_id == "string" &&
         typeof reply_text == "string" &&
         typeof req.body.delete_password == "string" &&
+        // Check lengths
+        // TODO: check thread_id length?
+        // TODO: make sure are handling correct lengths
         req.params.board.length < 101 &&
         req.params.board.length > 3 &&
         reply_text.length < 255 &&
@@ -470,7 +474,7 @@ module.exports = function (app) {
         deletePassword = req.body.delete_password;
         return [boardId, threadId, replyText, deletePassword];
       } else {
-        return false;
+        return false; // ends the parent function
       }
     };
 
@@ -591,6 +595,7 @@ module.exports = function (app) {
       res.status(500).json({ error: error.message });
       return false;
     } finally {
+      // console.log(requestLogPrefix, "Function end");
       return;
     }
   });
@@ -687,9 +692,8 @@ module.exports = function (app) {
   });
   const handleDeleteThread = (board_id, thread_id, requestLogPrefix) => {
     try {
-      createBoardIfUndefined(board_id);
-      
       // Hard delete
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads = forumDatabase[board_id].threads.filter(
         (thread) => thread._id !== thread_id
       );
