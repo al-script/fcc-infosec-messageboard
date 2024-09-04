@@ -1,7 +1,14 @@
 "use strict";
 
 module.exports = function (app) {
+  let forumDatabase = require("../database/forumDatabase");
+
   const { v4: uuidv4, validate } = require("uuid");
+
+  const bcrypt = require("bcrypt");
+  const saltRounds = 10;
+
+  // Common supporting functions
   const getNewId = () => {
     return uuidv4();
   };
@@ -9,9 +16,6 @@ module.exports = function (app) {
   const getCurrentDateString = () => {
     return new Date().toUTCString();
   };
-
-  const bcrypt = require("bcrypt");
-  const saltRounds = 10;
 
   const escapeHtml = (input) => {
     const escapeMap = {
@@ -31,127 +35,17 @@ module.exports = function (app) {
     });
   };
 
-  let testDate = getCurrentDateString();
-  let testPasswordHashed =
-    "$2b$10$aRYFZIJdFaKrzLhQXohPDuJF2fYCfu2Ylz9rY4j0DMwhaqROhBU7u";
-
-  // Test forum database. Using JS object to avoid having to monitor and keep a database perpetually active
-  let forumDatabase = {
-    test: {
-      title: "test",
-      createdOn: testDate,
-      lastReply: testDate,
-      threads: [
-        {
-          _id: "id",
-          text: "text",
-          created_on: testDate,
-          bumped_on: testDate,
-          reported: false,
-          delete_password: testPasswordHashed,
-          replies: [
-            {
-              _id: "reply1",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply2",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply3",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply4",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-          ],
-        },
-        {
-          _id: "id2",
-          text: "text2",
-          created_on: testDate,
-          bumped_on: testDate,
-          reported: false,
-          delete_password: testPasswordHashed,
-          replies: [
-            {
-              _id: "reply1",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply2",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply3",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-          ],
-        },
-      ],
-    },
-    test2: {
-      title: "test2",
-      createdOn: testDate,
-      lastReply: testDate,
-      threads: [
-        {
-          _id: "id",
-          text: "text",
-          created_on: testDate,
-          bumped_on: testDate,
-          reported: false,
-          delete_password: testPasswordHashed,
-          replies: [
-            {
-              _id: "reply id",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply id",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-            {
-              _id: "reply id",
-              text: "reply text",
-              created_on: testDate,
-              delete_password: testPasswordHashed,
-              reported: false,
-            },
-          ],
-        },
-      ],
-    },
-  };
+  function createBoardIfUndefined(boardName, currentTime) {
+    if (!forumDatabase[boardName]) {
+      currentTime = currentTime || getCurrentDateString();
+      forumDatabase[boardName] = {
+        title: boardName,
+        createdOn: currentTime,
+        lastReply: currentTime,
+        threads: [],
+      };
+    }
+  }
 
   // GET index request
   app.get("/api/boards", (req, res) => {
@@ -232,9 +126,10 @@ module.exports = function (app) {
       return;
     }
   });
-
   const getBoard = (board_id, requestLogPrefix) => {
     try {
+      createBoardIfUndefined(board_id);
+      // TODO: more efficient way to handle this rather than making a copy of the entire board each time...?
       const boardCopy = JSON.parse(
         JSON.stringify(forumDatabase[board_id].threads)
       );
@@ -265,27 +160,28 @@ module.exports = function (app) {
     console.log(requestLogPrefix, "Begin function");
 
     const validateRequest = () => {
+      const thread_text = req.body.thread_text || req.body.text;
       if (
         // Check existance
         req.params.board &&
-        req.body.thread_text &&
+        thread_text &&
         req.body.delete_password &&
         // Check types
         typeof req.params.board == "string" &&
-        typeof req.body.thread_text == "string" &&
+        typeof thread_text == "string" &&
         typeof req.body.delete_password == "string" &&
         // Check lengths
         req.params.board.length < 101 &&
         req.params.board.length > 3 &&
-        req.body.thread_text.length < 255 &&
-        req.body.thread_text.length > 3 &&
+        thread_text.length < 255 &&
+        thread_text.length > 3 &&
         req.body.delete_password.length < 255 &&
         req.body.delete_password.length > 3
       ) {
         // Escape and return the inputs
         let boardId, threadText, deletePassword;
         boardId = escapeHtml(req.params.board);
-        threadText = escapeHtml(req.body.thread_text);
+        threadText = escapeHtml(thread_text);
         deletePassword = req.body.delete_password;
         return [boardId, threadText, deletePassword];
       } else {
@@ -314,14 +210,16 @@ module.exports = function (app) {
       return;
     }
   });
-  const postThread = (board_id, thread_text, delete_password) => {
+  const postThread = (boardId, threadText, deletePassword) => {
     try {
       const currentTime = getCurrentDateString();
 
-      bcrypt.hash(delete_password, saltRounds, function (err, hash) {
-        forumDatabase[board_id].threads.push({
+      createBoardIfUndefined(boardId, currentTime);
+
+      bcrypt.hash(deletePassword, saltRounds, function (err, hash) {
+        forumDatabase[boardId].threads.push({
           _id: getNewId(),
-          text: thread_text,
+          text: threadText,
           created_on: currentTime,
           bumped_on: currentTime,
           reported: false,
@@ -329,6 +227,9 @@ module.exports = function (app) {
           replies: [],
         });
       });
+
+      // TODO: do I want to update the board to have a lastReply for this time?
+      // forumDatabase[board_id].lastReply = currentTime;
     } catch (error) {
       console.log(requestLogPrefix, "Posting reply failed");
       throw new Error(requestLogPrefix, "Posting reply failed");
@@ -386,6 +287,7 @@ module.exports = function (app) {
   });
   const getThread = (board_id, thread_id, requestLogPrefix) => {
     try {
+      createBoardIfUndefined(board_id);
       const threadCopy = JSON.parse(
         JSON.stringify(
           forumDatabase[board_id].threads.filter(
@@ -440,7 +342,7 @@ module.exports = function (app) {
       } else {
         const [board_id, thread_id, reply_id] = validated;
         handleReportReply(board_id, thread_id, reply_id, requestLogPrefix);
-        res.status(200).json({ message: "reported" });
+        res.status(200).send("reported");
         console.log(requestLogPrefix, "Success");
       }
     } catch (error) {
@@ -458,7 +360,9 @@ module.exports = function (app) {
     reply_id,
     requestLogPrefix
   ) => {
+    // TODO: Lot of time complexity here, is it possible to setup the db so can directly access the index of these? *** what are the tradeoffs of that?
     try {
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads
         .filter((thread) => thread._id === thread_id)[0]
         .replies.map((reply) => {
@@ -507,7 +411,7 @@ module.exports = function (app) {
 
         handleReportThread(board_id, thread_id, requestLogPrefix);
 
-        res.status(200).json({ message: "reported" });
+        res.status(200).send("reported");
         console.log(requestLogPrefix, "Success");
       }
     } catch (error) {
@@ -519,7 +423,10 @@ module.exports = function (app) {
     }
   });
   const handleReportThread = (board_id, thread_id, requestLogPrefix) => {
+    // TODO: Lot of time complexity here, is it possible to setup the db so can directly access the index of these? *** what are the tradeoffs of that?
     try {
+      createBoardIfUndefined(board_id);
+      // Use some instead?
       forumDatabase[board_id].threads.map((thread) => {
         if (thread._id === thread_id) {
           return (thread.reported = true);
@@ -531,36 +438,35 @@ module.exports = function (app) {
     }
   };
 
-  // ||||| REPLY ROUTES AND SUPPORTING FUNCTIONS |||||
-
-  // ||| POST REPLY ROUTE |||
+  // You can send a POST request to /api/replies/{board} with form data including text, delete_password, & thread_id. This will update the bumped_on date to the comment's date. In the thread's replies array, an object will be saved with at least the properties _id, text, created_on, delete_password, & reported.
   app.post("/api/replies/:board", (req, res) => {
     const requestLogPrefix = `${getNewId()} | POST REPLY REQ |`;
     console.log(requestLogPrefix, "Begin function");
 
     const validateRequest = () => {
+      const reply_text = req.body.reply_text || req.body.text;
       if (
         // Check existance
         req.params.board &&
         req.body.thread_id &&
-        req.body.reply_text &&
+        reply_text &&
         req.body.delete_password &&
         // Check types
         typeof req.params.board == "string" &&
         typeof req.body.thread_id == "string" &&
-        typeof req.body.reply_text == "string" &&
+        typeof reply_text == "string" &&
         typeof req.body.delete_password == "string" &&
         req.params.board.length < 101 &&
         req.params.board.length > 3 &&
-        req.body.reply_text.length < 255 &&
-        req.body.reply_text.length > 3 &&
+        reply_text.length < 255 &&
+        reply_text.length > 3 &&
         req.body.delete_password.length < 255 &&
         req.body.delete_password.length > 3
       ) {
         let boardId, threadId, replyText, deletePassword;
         boardId = escapeHtml(req.params.board);
         threadId = escapeHtml(req.body.thread_id);
-        replyText = escapeHtml(req.body.reply_text);
+        replyText = escapeHtml(reply_text);
         deletePassword = req.body.delete_password;
         return [boardId, threadId, replyText, deletePassword];
       } else {
@@ -597,6 +503,7 @@ module.exports = function (app) {
     requestLogPrefix
   ) => {
     try {
+      createBoardIfUndefined(board_id);
       const currentTime = getCurrentDateString();
       const targetThread = forumDatabase[board_id].threads.filter(
         (thread) => thread._id === thread_id
@@ -621,8 +528,7 @@ module.exports = function (app) {
     }
   };
 
-  // ||| DELETE REPLY ROUTE |||
-  // || USER STORY: You can send a DELETE request to /api/replies/{board} and pass along the thread_id, reply_id, & delete_password. Returned will be the string incorrect password or success. On success, the text of the reply_id will be changed to [deleted].
+  // You can send a DELETE request to /api/replies/{board} and pass along the thread_id, reply_id, & delete_password. Returned will be the string incorrect password or success. On success, the text of the reply_id will be changed to [deleted].
   app.delete("/api/replies/:board", (req, res) => {
     const requestLogPrefix = `${getNewId()} | DELETE REPLY REQ |`;
     console.log(requestLogPrefix, "Begin function");
@@ -669,11 +575,11 @@ module.exports = function (app) {
 
         bcrypt.compare(delete_password, reply_hash, function (err, result) {
           if (!result) {
-            res.status(200).json({ message: "incorrect password" });
+            res.status(200).send("incorrect password");
             console.log(requestLogPrefix, "Failure, incorrect password");
           } else {
             handleDeleteReply(board_id, thread_id, reply_id, requestLogPrefix);
-            res.status(200).json({ message: "success" });
+            res.status(200).send("success");
             console.log(requestLogPrefix, "Success");
           }
           return;
@@ -695,6 +601,7 @@ module.exports = function (app) {
     requestLogPrefix
   ) => {
     try {
+      createBoardIfUndefined(board_id);
       forumDatabase[board_id].threads
         .filter((thread) => thread._id === thread_id)[0]
         .replies.map((reply) => {
@@ -758,11 +665,11 @@ module.exports = function (app) {
 
         bcrypt.compare(delete_password, thread_hash, function (err, result) {
           if (!result) {
-            res.status(200).json({ message: "incorrect password" });
+            res.status(200).send("incorrect password");
             console.log(requestLogPrefix, "Failure, incorrect password");
           } else {
             handleDeleteThread(board_id, thread_id, requestLogPrefix);
-            res.status(200).json({ message: "success" });
+            res.status(200).send("success");
             console.log(requestLogPrefix, "Success");
           }
           return;
@@ -780,6 +687,9 @@ module.exports = function (app) {
   });
   const handleDeleteThread = (board_id, thread_id, requestLogPrefix) => {
     try {
+      createBoardIfUndefined(board_id);
+      
+      // Hard delete
       forumDatabase[board_id].threads = forumDatabase[board_id].threads.filter(
         (thread) => thread._id !== thread_id
       );
@@ -794,5 +704,11 @@ module.exports = function (app) {
     } catch {
       throw new Error(requestLogPrefix, "Failure to delete thread");
     }
+  };
+
+  return {
+    getForumDatabase() {
+      return forumDatabase;
+    },
   };
 };

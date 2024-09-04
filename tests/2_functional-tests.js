@@ -2,20 +2,16 @@ const chaiHttp = require("chai-http");
 const chai = require("chai");
 const assert = chai.assert;
 const server = require("../server");
-const api = require("../routes/api");
+const api = require("../routes/api")(server);
+let forumDatabase = require("../database/forumDatabase");
 
 chai.use(chaiHttp);
 
 const testBoard = "test";
 const testThread = "id";
-const testThreadToDelete = 'id2'
+const testThreadReplyCount = 5;
+const testThreadToDelete = "id2";
 const testReply = "reply1";
-
-// TODO: make the interface look nice
-// Handle security best practices
-
-// What works best for the assignment? Using one single it statement with multiple assertions, or multiple it statements? The assignment says 10 tests passing, so sounds like need one it statement for eac
-// Also, are these tests also supposed to check if the data is handled properly on the server? Or simply that the server returns the proper data to the client?
 
 suite("Functional Tests", function () {
   // 1. Creating a new thread: POST request to /api/threads/{board}
@@ -27,7 +23,7 @@ suite("Functional Tests", function () {
         .request(server)
         .post(`/api/threads/${testBoard}`)
         .send({
-          thread_text: "test_text",
+          text: "test_text",
           delete_password: "test_password",
         });
     });
@@ -36,9 +32,10 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    // it("should return the proper data to the client", async function () {
-    //   assert.equal(result.body.message, "Thread posted");
-    // });
+    it("should return the proper data to the client", async function () {
+      assert.equal(result.body.message, "Thread posted");
+    });
+
   });
 
   // 2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}
@@ -57,7 +54,29 @@ suite("Functional Tests", function () {
     });
 
     it("returns the proper data", function () {
-      assert.equal(true, true);
+      const threads = result.body;
+      // 0 - 10 threads
+      assert.isAtMost(threads.length, 10);
+      threads.forEach((thread) => {
+        // Contains _id, text, created_on, bumped_on, replies [], replyCount, 0 - 3 replies
+        assert.property(thread, "_id");
+        assert.property(thread, "text");
+        assert.property(thread, "created_on");
+        assert.property(thread, "bumped_on");
+        assert.property(thread, "replies");
+        assert.isAtMost(thread.replies.length, 3);
+        assert.property(thread, "replyCount");
+
+        thread.replies.forEach((reply) => {
+          // Contains _id, text, created_on
+          // Does not contain reported or delete_password on replies
+          assert.property(reply, "_id");
+          assert.property(reply, "text");
+          assert.property(reply, "created_on");
+          assert.notProperty(reply, "delete_password");
+          assert.notProperty(reply, "reported");
+        });
+      });
     });
   });
 
@@ -75,13 +94,12 @@ suite("Functional Tests", function () {
         });
     });
 
-    // do these need to be async functions...? probably not, they simply access a variable that was already defined by the previous async function
     it("should return the proper status code to the client", async function () {
       assert.equal(result.status, 200);
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "incorrect password");
+      assert.equal(result.text, "incorrect password");
     });
   });
 
@@ -104,7 +122,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "success");
+      assert.equal(result.text, "success");
     });
   });
 
@@ -126,7 +144,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "reported");
+      assert.equal(result.text, "reported");
     });
   });
 
@@ -149,11 +167,12 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    // it("should return the proper message to the client", async function () {
-    //   assert.equal(result.body.message, "Reply posted");
-    // });
+    it("should return the proper message to the client", async function () {
+      assert.equal(result.body.message, "Reply posted");
+    });
   });
 
+  // TODO: make sure returns proper data
   // 7. Viewing a single thread with all replies: GET request to /api/replies/{board}
   describe("7. Viewing a single thread with all replies: GET request to /api/replies/{board}", function () {
     let result;
@@ -171,7 +190,25 @@ suite("Functional Tests", function () {
     });
 
     it("returns the proper data", function () {
-      assert.equal(true, true);
+      const thread = result.body;
+      // Contains _id, text, created_on, bumped_on, replies [], replyCount
+      assert.property(thread, "_id");
+      assert.property(thread, "text");
+      assert.property(thread, "created_on");
+      assert.property(thread, "bumped_on");
+      assert.property(thread, "replies");
+      assert.equal(thread.replies.length, testThreadReplyCount);
+      assert.property(thread, "replyCount");
+
+      thread.replies.forEach((reply) => {
+        // Contains _id, text, created_on
+        // Does not contain reported or delete_password on replies
+        assert.property(reply, "_id");
+        assert.property(reply, "text");
+        assert.property(reply, "created_on");
+        assert.notProperty(reply, "delete_password");
+        assert.notProperty(reply, "reported");
+      });
     });
   });
 
@@ -195,7 +232,7 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "incorrect password");
+      assert.equal(result.text, "incorrect password");
     });
   });
 
@@ -219,8 +256,9 @@ suite("Functional Tests", function () {
     });
 
     it("should return the proper message to the client", async function () {
-      assert.equal(result.body.message, "success");
+      assert.equal(result.text, "success");
     });
+
   });
 
   // 10. Reporting a reply: PUT request to /api/replies/{board}
@@ -244,9 +282,7 @@ suite("Functional Tests", function () {
     });
 
     it("returns the proper data to the client", async function () {
-      assert.equal(result.body.message, "reported");
+      assert.equal(result.text, "reported");
     });
   });
 });
-
-// Could perhaps nest describes and its into segments to test more granularly
