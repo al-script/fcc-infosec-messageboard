@@ -2,6 +2,11 @@
 
 module.exports = function (app) {
   const { v4: uuidv4, validate } = require("uuid");
+  
+  const bcrypt = require("bcrypt");
+  const saltRounds = 10;
+
+  // Common supporting functions
   const getNewId = () => {
     return uuidv4();
   };
@@ -10,13 +15,7 @@ module.exports = function (app) {
     return new Date().toUTCString();
   };
 
-  const bcrypt = require("bcrypt");
-  const saltRounds = 10;
-
-  // TODO: fix so is actually escaping.... ***************
   const escapeHtml = (input) => {
-    // double check these
-    // need to escape \?
     const escapeMap = {
       "&": "&amp;",
       "<": "&lt;",
@@ -28,18 +27,29 @@ module.exports = function (app) {
       "=": "&#x3D;",
     };
 
-    // this the best way to handle the regex replacement? ***
     const escapeValues = /[&<>"'/`=]/g;
     return input.replace(escapeValues, (e) => {
       return escapeMap[e];
     });
   };
 
-  let testDate = getCurrentDateString();
-  let testPasswordHashed =
+  function createBoardIfUndefined(boardName, currentTime) {
+    if (!forumDatabase[boardName]) {
+      currentTime = currentTime || getCurrentDateString();
+      forumDatabase[boardName] = {
+        title: boardName,
+        createdOn: currentTime,
+        lastReply: currentTime,
+        threads: [],
+      };
+    }
+  }
+
+  // Test forum database. Using JS object to avoid having to monitor and periodically flush potentially inflammatory posts
+  const testDate = getCurrentDateString();
+  const testPasswordHashed =
     "$2b$10$aRYFZIJdFaKrzLhQXohPDuJF2fYCfu2Ylz9rY4j0DMwhaqROhBU7u";
 
-  // Test forum database. Using JS object to avoid having to keep a db perpetually active
   let forumDatabase = {
     test: {
       title: "test",
@@ -156,19 +166,6 @@ module.exports = function (app) {
       ],
     },
   };
-
-  async function createBoardIfUndefined(boardName, currentTime) {
-    if (!forumDatabase[boardName]) {
-      console.log("creating new board");
-      currentTime = currentTime || getCurrentDateString();
-      forumDatabase[boardName] = {
-        title: boardName,
-        createdOn: currentTime,
-        lastReply: currentTime,
-        threads: [],
-      };
-    }
-  }
 
   // GET index request
   app.get("/api/boards", (req, res) => {
@@ -561,7 +558,7 @@ module.exports = function (app) {
     }
   };
 
-// You can send a POST request to /api/replies/{board} with form data including text, delete_password, & thread_id. This will update the bumped_on date to the comment's date. In the thread's replies array, an object will be saved with at least the properties _id, text, created_on, delete_password, & reported.
+  // You can send a POST request to /api/replies/{board} with form data including text, delete_password, & thread_id. This will update the bumped_on date to the comment's date. In the thread's replies array, an object will be saved with at least the properties _id, text, created_on, delete_password, & reported.
   app.post("/api/replies/:board", (req, res) => {
     const requestLogPrefix = `${getNewId()} | POST REPLY REQ |`;
     console.log(requestLogPrefix, "Begin function");
@@ -812,7 +809,6 @@ module.exports = function (app) {
       return;
     }
   });
-  // hmmm, if split these into two functions then will have to filter/map twice, but if change to index-based then will be much simpler, less complexity to access
   const handleDeleteThread = (board_id, thread_id, requestLogPrefix) => {
     try {
       // Hard delete
