@@ -30,10 +30,6 @@ suite("Functional Tests", function () {
       result = await chai
         .request(server)
         .post(`/api/threads/${testBoard}`)
-        // .send({
-        //   thread_text: "test_text",
-        //   delete_password: "test_password",
-        // })
         .send({
           text: "test_text",
           delete_password: "test_password",
@@ -44,9 +40,9 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    // it("should return the proper data to the client", async function () {
-    //   assert.equal(result.body.message, "Thread posted");
-    // });
+    it("should return the proper data to the client", async function () {
+      assert.equal(result.body.message, "Thread posted");
+    });
   });
 
   // 2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}

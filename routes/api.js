@@ -361,25 +361,14 @@ module.exports = function (app) {
     }
   };
 
-  // TODO: handle thread content in addition to title
   // You can send a POST request to /api/threads/{board} with form data including text and delete_password. The saved database record will have at least the fields _id, text, created_on(date & time), bumped_on(date & time, starts same as created_on), reported (boolean), delete_password, & replies (array).
   app.post("/api/threads/:board", (req, res) => {
     const requestLogPrefix = `${getNewId()} | POST THREAD REQ |`;
     console.log(requestLogPrefix, "Begin function");
 
-    // make sure in proper format, make sure then format it properly
-    // if able to be formatted then return the formatted values and work with those values
-    // if not able to be formatted properly then return an error to client and do nothing else with the data, perhaps log the request somewhere
-
-    // **** IMPLIMENT ON CLIENT: Limit max/min length on clientside and enforce here, as well as acceptable characters, tell the limit and give a pop up or other status that says that are using restricted characters and to try again and give what the unacceptable character list is ****
-
-    // any way to sanitize a request before it even hits the route? in between? like automatically throw away any bad requests eg those over a certain length and with certain types?
-
-    // NEW METHOD:
     const validateRequest = () => {
       const thread_text = req.body.thread_text || req.body.text;
       if (
-        // Do also need to check that no other params and body etc... exist? Probably not if aren't doing anythign with them, but perhaps there is something that can be executed without referencing it that need to be mindful of?
         // Check existance
         req.params.board &&
         thread_text &&
@@ -397,20 +386,15 @@ module.exports = function (app) {
         req.body.delete_password.length > 3
       ) {
         // Escape and return the inputs
-        // TODO: handle escaping password, restrict characters in such a way that cannot be used for an attack, or find whatever the best practices are ***
         let boardId, threadText, deletePassword;
         boardId = escapeHtml(req.params.board);
         threadText = escapeHtml(thread_text);
-        // *************** TODO: ENFORCE SYMBOL RULES AND MAKE SURE NOT AN INJECTION ATTACK VECTOR****
-        // deletePassword = escapeHtml(req.body.delete_password); // hmmmmmm perhaps dont do it for the password, but how then handle if the password is some sort of injection attack? ***********
         deletePassword = req.body.delete_password;
         return [boardId, threadText, deletePassword];
       } else {
         return false; // ends the parent function
       }
     };
-
-    // Perhaps try catch isnt the best practice, because results in a false not an error, but perhaps it is best because it aligns with the request being in error...? but then make sure that returning false in the else makes sense, and that isnt a more readable way to handle that logic
 
     try {
       const validated = validateRequest();
@@ -434,16 +418,16 @@ module.exports = function (app) {
     }
   });
   // TODO: FIX inconsistent boardId and board_id
-  const postThread = (board_id, thread_text, delete_password) => {
+  const postThread = (boardId, threadText, deletePassword) => {
     try {
       const currentTime = getCurrentDateString();
 
-      createBoardIfUndefined(board_id, currentTime);
+      createBoardIfUndefined(boardId, currentTime);
 
-      bcrypt.hash(delete_password, saltRounds, function (err, hash) {
-        forumDatabase[board_id].threads.push({
+      bcrypt.hash(deletePassword, saltRounds, function (err, hash) {
+        forumDatabase[boardId].threads.push({
           _id: getNewId(),
-          text: thread_text,
+          text: threadText,
           created_on: currentTime,
           bumped_on: currentTime,
           reported: false,
