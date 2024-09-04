@@ -828,4 +828,10 @@ module.exports = function (app) {
       throw new Error(requestLogPrefix, "Failure to delete thread");
     }
   };
+
+  return {
+    getForumDatabase() {
+      return forumDatabase;
+    }
+  }
 };

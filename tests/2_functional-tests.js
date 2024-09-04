@@ -2,7 +2,7 @@ const chaiHttp = require("chai-http");
 const chai = require("chai");
 const assert = chai.assert;
 const server = require("../server");
-const api = require("../routes/api");
+const api = require("../routes/api")(server);
 
 chai.use(chaiHttp);
 
@@ -11,6 +11,8 @@ const testThread = "id";
 const testThreadReplyCount = 5;
 const testThreadToDelete = "id2";
 const testReply = "reply1";
+
+// TODO: check database actions, it("should properly affect the forum database")
 
 suite("Functional Tests", function () {
   // 1. Creating a new thread: POST request to /api/threads/{board}
@@ -36,7 +38,6 @@ suite("Functional Tests", function () {
     });
   });
 
-  // TODO: make sure returns proper data
   // 2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}
   describe("2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}", function () {
     let result;
@@ -196,7 +197,7 @@ suite("Functional Tests", function () {
       assert.property(thread, "created_on");
       assert.property(thread, "bumped_on");
       assert.property(thread, "replies");
-      assert.equal(thread.replies.length, 5);
+      assert.equal(thread.replies.length, testThreadReplyCount);
       assert.property(thread, "replyCount");
 
       thread.replies.forEach((reply) => {
@@ -284,5 +285,3 @@ suite("Functional Tests", function () {
     });
   });
 });
-
-// Could perhaps nest describes and its into segments to test more granularly
