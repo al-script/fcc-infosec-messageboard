@@ -2,7 +2,7 @@
 
 module.exports = function (app) {
   const { v4: uuidv4, validate } = require("uuid");
-  
+
   const bcrypt = require("bcrypt");
   const saltRounds = 10;
 

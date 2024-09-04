@@ -11,16 +11,6 @@ const testThread = "id";
 const testThreadToDelete = "id2";
 const testReply = "reply1";
 
-// TODO: make the interface look nice
-// Handle security best practices
-
-// What works best for the assignment? Using one single it statement with multiple assertions, or multiple it statements? The assignment says 10 tests passing, so sounds like need one it statement for eac
-// Also, are these tests also supposed to check if the data is handled properly on the server? Or simply that the server returns the proper data to the client?
-
-// TODO: Fix API so that create a board when are using that board name in a request****
-// Need to refactor API so that handles creating a board if that board doesn't already exist, that includes doing what is necessary to handle updating the board
-// Gotta then test for the _id that is generated for the thread...
-
 suite("Functional Tests", function () {
   // 1. Creating a new thread: POST request to /api/threads/{board}
   describe("1. Creating a new thread: POST request to /api/threads/{board}", function () {
@@ -45,6 +35,7 @@ suite("Functional Tests", function () {
     });
   });
 
+  // TODO: make sure returns proper data
   // 2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}
   describe("2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}", function () {
     let result;
@@ -60,9 +51,8 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    it("returns the proper data", function () {
-      assert.equal(true, true);
-    });
+    // it("returns the proper data", function () {
+    // });
   });
 
   // 3. Deleting a thread with the incorrect password: DELETE request to /api/threads/{board} with an invalid delete_password
@@ -79,7 +69,6 @@ suite("Functional Tests", function () {
         });
     });
 
-    // do these need to be async functions...? probably not, they simply access a variable that was already defined by the previous async function
     it("should return the proper status code to the client", async function () {
       assert.equal(result.status, 200);
     });
@@ -153,11 +142,12 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    // it("should return the proper message to the client", async function () {
-    //   assert.equal(result.body.message, "Reply posted");
-    // });
+    it("should return the proper message to the client", async function () {
+      assert.equal(result.body.message, "Reply posted");
+    });
   });
 
+  // TODO: make sure returns proper data
   // 7. Viewing a single thread with all replies: GET request to /api/replies/{board}
   describe("7. Viewing a single thread with all replies: GET request to /api/replies/{board}", function () {
     let result;
@@ -174,9 +164,8 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    it("returns the proper data", function () {
-      assert.equal(true, true);
-    });
+    // it("returns the proper data", function () {
+    // });
   });
 
   // 8. Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password
