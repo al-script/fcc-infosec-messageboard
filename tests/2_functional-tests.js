@@ -8,6 +8,7 @@ chai.use(chaiHttp);
 
 const testBoard = "test";
 const testThread = "id";
+const testThreadReplyCount = 5;
 const testThreadToDelete = "id2";
 const testReply = "reply1";
 
@@ -51,8 +52,31 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    // it("returns the proper data", function () {
-    // });
+    it("returns the proper data", function () {
+      const threads = result.body;
+      // 0 - 10 threads
+      assert.isAtMost(threads.length, 10);
+      threads.forEach((thread) => {
+        // Contains _id, text, created_on, bumped_on, replies [], replyCount, 0 - 3 replies
+        assert.property(thread, "_id");
+        assert.property(thread, "text");
+        assert.property(thread, "created_on");
+        assert.property(thread, "bumped_on");
+        assert.property(thread, "replies");
+        assert.isAtMost(thread.replies.length, 3);
+        assert.property(thread, "replyCount");
+
+        thread.replies.forEach((reply) => {
+          // Contains _id, text, created_on
+          // Does not contain reported or delete_password on replies
+          assert.property(reply, "_id");
+          assert.property(reply, "text");
+          assert.property(reply, "created_on");
+          assert.notProperty(reply, "delete_password");
+          assert.notProperty(reply, "reported");
+        });
+      });
+    });
   });
 
   // 3. Deleting a thread with the incorrect password: DELETE request to /api/threads/{board} with an invalid delete_password
@@ -164,8 +188,27 @@ suite("Functional Tests", function () {
       assert.equal(result.status, 200);
     });
 
-    // it("returns the proper data", function () {
-    // });
+    it("returns the proper data", function () {
+      const thread = result.body;
+      // Contains _id, text, created_on, bumped_on, replies [], replyCount
+      assert.property(thread, "_id");
+      assert.property(thread, "text");
+      assert.property(thread, "created_on");
+      assert.property(thread, "bumped_on");
+      assert.property(thread, "replies");
+      assert.equal(thread.replies.length, 5);
+      assert.property(thread, "replyCount");
+
+      thread.replies.forEach((reply) => {
+        // Contains _id, text, created_on
+        // Does not contain reported or delete_password on replies
+        assert.property(reply, "_id");
+        assert.property(reply, "text");
+        assert.property(reply, "created_on");
+        assert.notProperty(reply, "delete_password");
+        assert.notProperty(reply, "reported");
+      });
+    });
   });
 
   // 8. Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password
