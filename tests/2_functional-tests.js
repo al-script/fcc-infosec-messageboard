@@ -36,6 +36,11 @@ suite("Functional Tests", function () {
     it("should return the proper data to the client", async function () {
       assert.equal(result.body.message, "Thread posted");
     });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
+    });
   });
 
   // 2. Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}
@@ -101,6 +106,11 @@ suite("Functional Tests", function () {
     it("should return the proper message to the client", async function () {
       assert.equal(result.text, "incorrect password");
     });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
+    });
   });
 
   // 4. Deleting a thread with the correct password: DELETE request to /api/threads/{board} with a valid delete_password
@@ -124,6 +134,11 @@ suite("Functional Tests", function () {
     it("should return the proper message to the client", async function () {
       assert.equal(result.text, "success");
     });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
+    });
   });
 
   // 5. Reporting a thread: PUT request to /api/threads/{board}
@@ -145,6 +160,11 @@ suite("Functional Tests", function () {
 
     it("should return the proper message to the client", async function () {
       assert.equal(result.text, "reported");
+    });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
     });
   });
 
@@ -169,6 +189,11 @@ suite("Functional Tests", function () {
 
     it("should return the proper message to the client", async function () {
       assert.equal(result.body.message, "Reply posted");
+    });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
     });
   });
 
@@ -234,6 +259,11 @@ suite("Functional Tests", function () {
     it("should return the proper message to the client", async function () {
       assert.equal(result.text, "incorrect password");
     });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
+    });
   });
 
   // 9. Deleting a reply with the correct password: DELETE request to /api/replies/{board} with a valid delete_password
@@ -257,6 +287,11 @@ suite("Functional Tests", function () {
 
     it("should return the proper message to the client", async function () {
       assert.equal(result.text, "success");
+    });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
     });
   });
 
@@ -282,6 +317,11 @@ suite("Functional Tests", function () {
 
     it("returns the proper data to the client", async function () {
       assert.equal(result.text, "reported");
+    });
+
+    it("should properly affect the forum database", async function () {
+      const forumDatabase = api.getForumDatabase()
+      
     });
   });
 });
