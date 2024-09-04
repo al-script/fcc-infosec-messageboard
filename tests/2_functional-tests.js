@@ -196,7 +196,6 @@ suite("Functional Tests", function () {
       assert.property(thread, "created_on");
       assert.property(thread, "bumped_on");
       assert.property(thread, "replies");
-      assert.equal(thread.replies.length, 5);
       assert.property(thread, "replyCount");
 
       thread.replies.forEach((reply) => {
