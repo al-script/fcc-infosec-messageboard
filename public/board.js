@@ -685,7 +685,7 @@ async function handlePage() {
 
   async function renderPageError() {
     const target = document.getElementById("board-container");
-    target.innerHTML = `<div>Error</div>`;
+    target.innerHTML = `<div>Board cannot be displayed</div>`;
   }
 
   async function handleHooks(board) {

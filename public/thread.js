@@ -499,7 +499,7 @@ async function handlePage() {
 
   async function renderPageError() {
     const target = document.getElementById("thread-container");
-    target.innerHTML = `<div>Error</div>`;
+    target.innerHTML = `<div>Thread not found</div>`;
   }
 
   // TODO: need to expose the boardId globally for use in here, need to resolve potential conflict of how using thread variable

@@ -87,7 +87,7 @@ const drawPage = async () => {
     console.error(error);
     document.getElementById(
       "page-container"
-    ).innerHTML = `<div>Page cannot be displayed</div>`;
+    ).innerHTML = `<div>Index cannot be displayed</div>`;
   }
 };
 
