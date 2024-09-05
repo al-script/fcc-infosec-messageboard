@@ -1,53 +1,3 @@
-// BUGS
-// Fix thread address link not working properly, check how getting address, works fine with view all replies button
-
-// RESEARCH
-// Any downsides to marking a function as async if doesn't need to be?
-// Should I pass in parameters to child functions if dont really need to, if already defined in parent?
-
-// MINOR DESIGN FIXES
-// Check through material design specs and update anything different to match if would work well
-// fix active/hover classes, tweak the design
-// status message, wrap in div and center the div
-// perhaps remove check at the start of status message eg: [check] reply deleted successfully
-
-// REFACTORING
-// Refactoring functions so dont repeat self
-// Break out into separate files?
-// Consistent variable naming
-// Could make forms be popout/popover
-// could redo functions such that are getting elements by ID instead of class, would then need to append ID to relevant sections when drawing the page
-
-// THEORETICAL
-// TODO: perhaps add an X button to the top right of forms to dismiss them
-// Screen reader and other accessibility features
-// add header/footer
-// could implement showing x hours ago if > 24hrs, and also give the proper date, if can find a clean way to do so
-// is the way that are storing date in the database acceptable? does it take into account timezones properly when submitting a thread? seems like are...
-// if close the toggle container, should that also close the associated forms? **** should add a little x button to close the form, or is that overkill, bad design because two ways to do same thing when only need one?
-
-// POSSIBLE TODOS
-// -- Fix displaying lastReply in thread if replies are 0
-// -- Fix updating the last reply in thread header if last reply is simply a new thread
-// -- It's possible that this is due to the requirement where must have the last reply date created when making a new thread? or is this not necessary?
-// Perhaps make more things non selectable... like form titles?
-
-// MAJOR FUTURE
-// Get date formatting and form requirements from server
-// Handle thread text content both serverside and clientside
-
-// ONCE COMPLETE
-// adapt for thread view: show full title
-// adapt for forum index view
-// Serve from the server, test all calls
-
-// REFACTOR
-// Make everything modular, break it all out into different files and simply pass in what is necessary so that way dont need to have so much repeated code
-
-// TODO
-// Handle max width of info bar below board name at large screen sizes, is too far apart 
-
-
 handlePage();
 
 async function handlePage() {
@@ -735,7 +685,7 @@ async function handlePage() {
 
   async function renderPageError() {
     const target = document.getElementById("board-container");
-    target.innerHTML = `<div>Error</div>`;
+    target.innerHTML = `<div>Board cannot be displayed</div>`;
   }
 
   async function handleHooks(board) {
@@ -1133,9 +1083,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1286,9 +1234,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1621,9 +1567,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1777,9 +1721,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;

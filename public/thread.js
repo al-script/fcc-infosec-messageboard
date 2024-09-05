@@ -1,11 +1,3 @@
-// TODO:
-// Tidy up
-// Have a function where can hover over or click to view a popout of the full title of thread/board, or click to collapse the title down and click again to hide
-// Make thread width be consistent between board and thread view
-// Perhaps show full title on the thread view, or atleast default to a three dot style at the end and then press that to collapse the full title or visa versa start with full title and allow to collapse
-
-// Perhaps set a max width on the thread
-
 handlePage();
 
 async function handlePage() {
@@ -507,7 +499,7 @@ async function handlePage() {
 
   async function renderPageError() {
     const target = document.getElementById("thread-container");
-    target.innerHTML = `<div>Error</div>`;
+    target.innerHTML = `<div>Thread not found</div>`;
   }
 
   // TODO: need to expose the boardId globally for use in here, need to resolve potential conflict of how using thread variable
@@ -647,9 +639,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -800,9 +790,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1135,9 +1123,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1155,7 +1141,7 @@ async function handlePage() {
               submitStatusParent.innerHTML = `Reported <i class="fa-solid fa-check color-primary"></i>`;
             } else {
               submitStatusParent.classList.toggle("hidden");
-              submitStatusParent.innerHTML = `Reporting error `;
+              submitStatusParent.innerHTML = `Reporting error`;
             }
           }
         }
@@ -1291,9 +1277,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
