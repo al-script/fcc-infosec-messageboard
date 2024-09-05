@@ -647,9 +647,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status == 200) {
                 return true;
               } else {
                 return false;
