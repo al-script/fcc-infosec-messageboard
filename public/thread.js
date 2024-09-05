@@ -647,7 +647,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              if (response.status == 200) {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -798,9 +798,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1133,9 +1131,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1153,7 +1149,7 @@ async function handlePage() {
               submitStatusParent.innerHTML = `Reported <i class="fa-solid fa-check color-primary"></i>`;
             } else {
               submitStatusParent.classList.toggle("hidden");
-              submitStatusParent.innerHTML = `Reporting error `;
+              submitStatusParent.innerHTML = `Reporting error`;
             }
           }
         }
@@ -1289,9 +1285,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
