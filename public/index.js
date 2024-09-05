@@ -1,26 +1,3 @@
-// SHORT TERM
-// TODO: add propery security to the links, noreferrer etc...
-
-// LONG TERM
-// Add function to create new board
-// TODO: add search functionality, ability to delete/report boards as well as figure out best way to handle that on backend perhaps simply a delete flag so that the board itself can be restored or accessed in the backend if necessary
-
-// DESIGN POSSIBILITIES:
-// sort by last reply? alphabetical?
-// Perhaps make it a two row deal, with last reply + created || threads + replies
-
-// TODOS
-// Underline for b/ and the thread title are different sizes
-// Make same gap for each page
-
-// REPLY AND THREAD COUNTS
-// Fix for board view
-// Could set flex flow to wrap at large numbers for the whole row ***
-// Or could set the individual item overflow wrap along with proper widths for each item ***
-// Let you hover over the title to see the full title in a popout, or press a button to see full title, on board view ***
-// Add a back button to index on error page, perhaps give you links to each section and say that there was an error accessing something along this link chain
-
-
 const getBoards = async () => {
   try {
     const url = "/api/boards";

@@ -1,11 +1,3 @@
-// TODO:
-// Tidy up
-// Have a function where can hover over or click to view a popout of the full title of thread/board, or click to collapse the title down and click again to hide
-// Make thread width be consistent between board and thread view
-// Perhaps show full title on the thread view, or atleast default to a three dot style at the end and then press that to collapse the full title or visa versa start with full title and allow to collapse
-
-// Perhaps set a max width on the thread
-
 handlePage();
 
 async function handlePage() {
