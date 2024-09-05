@@ -1083,9 +1083,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1236,9 +1234,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1571,9 +1567,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const reported = await response.json();
-
-              if (reported.message == "reported") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
@@ -1727,9 +1721,7 @@ async function handlePage() {
                 throw new Error("Network response was not OK");
               }
 
-              const deleted = await response.json();
-
-              if (deleted.message == "success") {
+              if (response.status === 200) {
                 return true;
               } else {
                 return false;
